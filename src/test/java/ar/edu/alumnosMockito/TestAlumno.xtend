@@ -10,8 +10,8 @@ class TestAlumno {
 
 	Alumno marina
 	Alumno chotelli
-	Curso cursoUnicoAlgo2 = mock(typeof(Curso))
-	Curso cursoUnicoAlgo3 = mock(typeof(Curso))
+	Curso cursoUnicoAlgo2
+	Curso cursoUnicoAlgo3
 	Cursada marinaEnAlgoritmos2
 	Cursada marinaEnAlgoritmos3
 	Cursada chotelliEnAlgoritmos2
@@ -22,12 +22,12 @@ class TestAlumno {
 	@Before
 	def void init() {
 		// Definicion de stubs y mocks
-		when(cursoUnicoAlgo2.cantidadParciales).thenReturn(2)
-		when(cursoUnicoAlgo3.cantidadParciales).thenReturn(1)
-
-		nota2 = StubNota.build(2)
-		nota5 = StubNota.build(5)
-		nota10 = StubNota.build(10)
+		cursoUnicoAlgo2 = mockearCurso(2)
+		cursoUnicoAlgo3 = mockearCurso(1)
+		
+		nota2 = mockearNota(2)
+		nota5 = mockearNota(5)
+		nota10 = mockearNota(10)
 		
 		marinaEnAlgoritmos2 = new Cursada(cursoUnicoAlgo2) => [
 			rendirParcial(1, nota2)
@@ -89,6 +89,12 @@ class TestAlumno {
 		marinaEnAlgoritmos2.aprobo
 		verify(nota2, never()).nota
 	}
+
+	@Test
+	def void paraSaberSiMarinaAproboAlgoritmos2NoUsamosElMensajeNotasDeNota() {
+		marinaEnAlgoritmos2.aprobo
+		// TODO: mirar verify(any(typeof(Nota)), never()).nota
+	} 
 	
 	@Test
 	def void chotelliApruebaAlgoritmos2ConUnPocoDeAyuda() {
@@ -100,16 +106,18 @@ class TestAlumno {
 		// Probamos que nunca se pregunto "posta" si chotelli aprobo Algoritmos 2
 		verify(nota2, never()).aprobo
 	}
+
+	def mockearCurso(int cantidadParciales) {
+		val cursoTemp = mock(typeof(Curso))
+		when(cursoTemp.cantidadParciales).thenReturn(cantidadParciales)
+		cursoTemp
+	}
 	
-}
-
-class StubNota {
-
-	def static Nota build(Integer nota) {
-		var Nota stubNota = mock(typeof(Nota))
-		when(stubNota.nota).thenReturn(nota)
-		when(stubNota.aprobo).thenReturn(nota > 4)
-		return stubNota
+	def mockearNota(int nota) {
+		val notaTemp = mock(typeof(Nota))
+		when(notaTemp.nota).thenReturn(nota)
+		when(notaTemp.aprobo).thenReturn(nota >= 4)
+		notaTemp
 	}
 	
 }
