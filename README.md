@@ -1,7 +1,7 @@
 
 # Ejemplo de Testing con Stubs y Mocks - Alumnos
 
-![image](images/pizarron.png) 
+<img src="images/pizarron.png" style="height: 110px; width: 110px;"/> 
 
 ## Dominio
 Tenemos modelado 
