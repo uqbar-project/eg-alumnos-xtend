@@ -1,6 +1,8 @@
 
 # Ejemplo de Testing con Stubs y Mocks - Alumnos
 
+[![Build Status](https://travis-ci.org/uqbar-project/eg-alumnos-xtend.svg?branch=master)](https://travis-ci.org/uqbar-project/eg-alumnos-xtend) [![Coverage Status](https://coveralls.io/repos/github/uqbar-project/eg-alumnos-xtend/badge.svg?branch=master)](https://coveralls.io/github/uqbar-project/eg-alumnos-xtend?branch=master)
+
 <img src="images/pizarron.png" height="170px" width="170px"/> 
 
 ## Dominio
