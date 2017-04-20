@@ -18,7 +18,7 @@ Cada cursada define
 
 ![image](images/classDiagram.png)
 
-Pero **todavía no tenemos la implementación de curso ni de nota**, pero queremos verificar si un alumno aprobó una materia (porque aprobó todos los exámenes de la cursada). Para eso generamos stubs y mocks.
+**Todavía no tenemos la implementación de curso ni de nota**, pero queremos verificar si un alumno aprobó una materia (porque aprobó todos los exámenes de la cursada). Para eso generamos stubs y mocks.
 
 ## Objetivo
 
