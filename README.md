@@ -39,7 +39,7 @@ Podemos implementar nuestros propios stubs, objetos que tienen un comportamiento
 
 En el caso del curso, forzamos a que haya un solo examen, y en el caso de la nota, elegimos una nota numérica cualquiera y decimos que aprobó. Esta **no será la implementación final que el usuario estará probando**, pero permite acotar la unitariedad de la prueba para saber si la cursada de un alumno está aprobada (porque nos interesa saber si el método aprobo() de Cursada está correctamente definido).
 
-Incluso cuando tengamos la implementación final para Curso y Nota, podemos conservar los objetos stub para generar lo que Martin Fowler denomina **test solitarios**
+Incluso cuando tengamos la implementación final para Curso y Nota, podemos conservar los objetos stub para generar lo que Martin Fowler denomina [**test solitarios**](https://martinfowler.com/bliki/UnitTest.html)
 
 ![image](https://martinfowler.com/bliki/images/unitTest/isolate.png)
 
@@ -51,21 +51,21 @@ Mockito permite _envolver_ las interfaces proveyendo respuestas cada vez que lla
 ```xtend
 class TestAlumno {
 
-	@Before
-	def void init() {
+    @Before
+    def void init() {
         ...
-		nota2 = mockearNota(2)
-		nota5 = mockearNota(5)
-		nota10 = mockearNota(10)
+        nota2 = mockearNota(2)      
+        nota5 = mockearNota(5)
+        nota10 = mockearNota(10)
         ...
     }
 
-	def mockearNota(int nota) {
-		val notaTemp = mock(typeof(Nota))
-		when(notaTemp.nota).thenReturn(nota)
-		when(notaTemp.aprobo).thenReturn(nota >= 4)
-		notaTemp
-	}
+    def mockearNota(int nota) {
+        val notaTemp = mock(typeof(Nota))
+        when(notaTemp.nota).thenReturn(nota)
+        when(notaTemp.aprobo).thenReturn(nota >= 4)
+        notaTemp
+    }
 ```
 
 Lo mismo para Curso. Entonces cada vez que preguntemos a la referencia nota2 si aprobó, devolverá false. El método mockearNota permite generar objetos descartables para usar en los tests, sin necesidad de implementar clases concretas.
