@@ -15,10 +15,13 @@ class TestAlumno {
 	Cursada marinaEnAlgoritmos2
 	Cursada marinaEnAlgoritmos3
 	Cursada chotelliEnAlgoritmos2
+	Cursada chotelliEnDiscreta
 	Nota nota2
 	Nota nota5
 	Nota nota10
-
+	Nota nota7 = new StubNotaSiete
+	Curso stubCursoDiscreta = new StubCurso
+	
 	@Before
 	def void init() {
 		// Definicion de stubs y mocks
@@ -40,6 +43,9 @@ class TestAlumno {
 		chotelliEnAlgoritmos2 = new Cursada(cursoUnicoAlgo2) => [
 			rendirParcial(1, nota2)
 		]
+		chotelliEnDiscreta = new Cursada(stubCursoDiscreta) => [
+			rendirParcial(1, nota7)
+		]
 
 		// ***************************************************
 		marina = new Alumno("Marina Huberman") => [
@@ -49,6 +55,7 @@ class TestAlumno {
 
 		chotelli = new Alumno("Gervasio Chotelli") => [
 			cursar(chotelliEnAlgoritmos2)
+			cursar(chotelliEnDiscreta)
 		]
 	}
 
@@ -57,17 +64,32 @@ class TestAlumno {
 	 */
 	@Test
 	def void marinaAproboAlgoritmos2() {
-		Assert.assertEquals(true, marinaEnAlgoritmos2.aprobo)
+		Assert.assertTrue(marinaEnAlgoritmos2.aprobo)
 	}
 
 	@Test
 	def void marinaAproboAlgoritmos3() {
-		Assert.assertEquals(true, marinaEnAlgoritmos3.aprobo)
+		Assert.assertTrue(marinaEnAlgoritmos3.aprobo)
 	}
 
 	@Test
 	def void chotelliNoAproboAlgoritmos2() {
-		Assert.assertEquals(false, chotelliEnAlgoritmos2.aprobo)
+		Assert.assertFalse(chotelliEnAlgoritmos2.aprobo)
+	}
+
+	@Test
+	def void chotelliAproboDiscreta() {
+		Assert.assertTrue(chotelliEnDiscreta.aprobo)
+	}
+
+	@Test
+	def void marinaSeRecibio() {
+		Assert.assertTrue(marina.seRecibio)
+	}
+
+	@Test
+	def void chotelliNoSeRecibio() {
+		Assert.assertFalse(chotelli.seRecibio)
 	}
 
 	/**
