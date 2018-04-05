@@ -115,6 +115,7 @@ class TestAlumno {
 		marinaEnAlgoritmos2.aprobo
 		#[nota2, nota5, nota10].forEach [ nota |
 			verify(nota, never()).nota
+			verify(nota, times(1)).aprobo
 		]
 	}
 
