@@ -6,6 +6,17 @@ import org.junit.Test
 
 import static org.mockito.Mockito.*
 
+class StubCurso implements Curso {
+	override getCantidadParciales() { 1 }
+}
+
+class StubNotaSiete implements Nota {
+	
+	override aprobo() { true }
+	override getNota() { 7 }
+	
+}
+
 class TestAlumno {
 
 	Alumno marina
@@ -121,7 +132,10 @@ class TestAlumno {
 
 	@Test
 	def void chotelliApruebaAlgoritmos2ConUnPocoDeAyuda() {
-		val Cursada cursadaBuenaChotelli = spy(chotelliEnAlgoritmos2)
+		// spy permite interceptar un objeto, mientras
+		// que mock trabaja sobre una clase
+		val Cursada cursadaBuenaChotelli = 
+			spy(chotelliEnAlgoritmos2)
 		// cuando me pregunten por chotelli en Algoritmos 2
 		// le digo que aprobo
 		doReturn(true).when(cursadaBuenaChotelli).aprobo
@@ -134,13 +148,14 @@ class TestAlumno {
 	 * Implementación de mocks de cursos y notas 
 	 */
 	def mockearCurso(int cantidadParciales) {
-		val cursoTemp = mock(typeof(Curso))
-		when(cursoTemp.cantidadParciales).thenReturn(cantidadParciales)
+		val cursoTemp = mock(Curso)
+		when(cursoTemp.cantidadParciales)
+			.thenReturn(cantidadParciales)
 		cursoTemp
 	}
 
 	def mockearNota(int nota) {
-		val notaTemp = mock(typeof(Nota))
+		val notaTemp = mock(Nota)
 		when(notaTemp.nota).thenReturn(nota)
 		when(notaTemp.aprobo).thenReturn(nota >= 4)
 		notaTemp
