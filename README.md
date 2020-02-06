@@ -17,7 +17,8 @@ Muestra cómo testear con mocks y stubs cuando tenemos una aplicación parcialme
 
 
 ## Dominio
-Tenemos modelado 
+
+Tenemos modelado
 
 * un alumno
  * con n cursadas
@@ -46,12 +47,9 @@ Incluso cuando tengamos la implementación final para Curso y Nota, podemos cons
 
 ## Stubs y mocks implementados con Mockito
 
-Mockito permite _envolver_ las interfaces proveyendo respuestas cada vez que llamemos a un método. Esto lo pueden ver en el test
+Mockito permite _envolver_ las interfaces proveyendo respuestas cada vez que llamemos a un método. Esto lo pueden ver en el cualquiera de los archivos de test
 
 ```xtend
-class TestAlumno {
-
-    @Before
     def void init() {
         ...
         nota2 = mockearNota(2)      
@@ -59,63 +57,68 @@ class TestAlumno {
         nota10 = mockearNota(10)
         ...
     }
+```
 
-    def mockearNota(int nota) {
-        val notaTemp = mock(typeof(Nota))
-        when(notaTemp.nota).thenReturn(nota)
-        when(notaTemp.aprobo).thenReturn(nota >= 4)
+La clase MockHelpers tiene métodos _static_ que permiten configurar el comportamiento para cada mensaje que enviemos:
+
+```xtend
+    static def mockearNota(int nota) {
+        val notaTemp = mock(Nota)
+        when(notaTemp.nota).thenReturn(nota)          // cuando envíen el mensaje nota, devolvé el valor del parámetro nota
+        when(notaTemp.aprobo).thenReturn(nota >= 4)   // cuando pregunten si aprobó, dependerá de que nota sea mayor o igual a 4
         notaTemp
     }
 ```
 
 Lo mismo para Curso. Entonces cada vez que preguntemos a la referencia nota2 si aprobó, devolverá false. El método mockearNota permite generar objetos descartables para usar en los tests, sin necesidad de implementar clases concretas.
 
+## Escenarios posibles
+
+Podemos dividir los casos de prueba en dos grandes escenarios:
+
+- un alumno recibido, que aprobó todas las materias
+- un alumno que aprobó algunas materias y desaprobó otras
+
+(podemos pensar más casos pero son subconjuntos de estos dos y para fines didácticos nos alcanza). Escribimos entonces dos archivos de tests que reflejen estos escenarios.
+
 ## Tests de estado (stub)
 
 Mockito permite hacer tests de estado, es decir, una vez generada la dependencia de objetos: 
 
-- una alumna Marina
+- un/a alumno/a
 - cursando la materia Algoritmos 2
 - cuyo curso tiene 2 parciales
 - y con notas de aprobación en los recuperatorios
 
-podemos verificar que Marina aprobó la cursada.
+podemos verificar que aprobó la cursada.
 
 ```xtend
 	@Test
-	def void marinaAproboAlgoritmos2() {
-		Assert.assertTrue(marinaEnAlgoritmos2.aprobo)
+	def void aproboAlgoritmos2() {
+		assertTrue(cursadaAlgoritmos2.aprobo, "El alumno recibido debería tener aprobada Algo2")
 	}
 ```
 
-Pueden ver otros tests que acompañan el ejemplo.
+Pueden ver los tests del ejemplo que son más abarcativos que la presente explicación.
 
 ## Test de comportamiento
 
-Pero además, Mockito permite establecer expectativas. Por ejemplo, para saber si Marina aprobó la cursada de Algoritmos 2 enviamos el mensaje aprobo() al objeto Cursada, que no debería preguntarle a Nota la nota numérica, sino delegar en Nota la pregunta (Nota tiene un método aprobo() que sirve para tal fin). Entonces podemos hacer el siguiente test:
+Pero además, Mockito permite establecer expectativas. Por ejemplo, para saber si el alumno recibido aprobó la cursada de Algoritmos 2 enviamos el mensaje aprobo() al objeto Cursada, que no debería preguntarle a Nota la nota numérica, sino delegar en Nota la pregunta (Nota tiene un método aprobo() que sirve para tal fin). Entonces podemos hacer el siguiente test:
 
 ```xtend
 	@Test
-	def void paraSaberSiMarinaAproboAlgoritmos2NoUsamosElMensajeNotasDeNota() {
-		marinaEnAlgoritmos2.aprobo
-		#[nota2, nota5, nota10].forEach [ nota |
-			verify(nota, never()).nota
-		]
-	}
-```
-
-lo que evaluamos es que para saber si Marina aprobó la cursada de Algoritmos 2, nunca se envió el mensaje nota() a ninguno de los objetos nota (podríamos ser más detallistas y pedir que exactamente una vez se haya enviado el mensaje aprobo):
-
-
-```xtend
-	@Test
-	def void paraSaberSiMarinaAproboAlgoritmos2NoUsamosElMensajeNotasDeNota() {
-		marinaEnAlgoritmos2.aprobo
+	def void paraSaberSiAproboAlgoritmos2DelegamosBienEnClaseNota() {
+		cursadaAlgoritmos2.aprobo
 		#[nota2, nota5, nota10].forEach [ nota |
 			verify(nota, never()).nota
 			verify(nota, times(1)).aprobo
 		]
 	}
 ```
+
+lo que evaluamos es que
+
+- nunca se envió el mensaje nota() a ninguno de los objetos nota 
+- exactamente una vez se envió el mensaje aprobo
 
 Eso permite hacer pruebas a nivel diseño (verificamos correcta delegación), no solo respecto al estado esperado.
