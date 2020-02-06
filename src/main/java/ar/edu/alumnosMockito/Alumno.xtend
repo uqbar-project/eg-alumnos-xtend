@@ -4,14 +4,10 @@ import java.util.List
 import java.util.Map
 
 class Alumno {
-	String nombre
+	
 	List<Cursada> cursadas = newArrayList
 	
-	new(String _nombre) {
-		nombre = _nombre
-	}
-	
-	def boolean seRecibio() {
+	def seRecibio() {
 		cursadas.forall [ cursada | cursada.aprobo ]	
 	}
 
@@ -33,7 +29,7 @@ class Cursada {
 	}
 	
 	def rendirParcial(Integer numeroParcial, Nota nota) {
-		var List<Nota> notasAux = getNotasDeParcial(numeroParcial)
+		val notasAux = getNotasDeParcial(numeroParcial)
 		notasAux.add(nota)
 		notas.put(numeroParcial, notasAux)
 	}
@@ -58,4 +54,3 @@ interface Nota {
 	def int getNota()
 	
 }
-
